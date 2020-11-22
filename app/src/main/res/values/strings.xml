@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">Newsletter</string>
+    <string name="home">Home</string>
+    <string name="aboutus">About us</string>
+    <string name="favoris">Favoris</string>
+    <string name="list_articles">Articles</string>
+    <string name="pays">Pays</string>
+    <string name="category">Catégorie</string>
+    <string name="editor">Editeur</string>
+    <string name="voirArticles">Voir les articles</string>
+    <string name="ekip">Team</string>
+    <string name="aaubert">Augustin Aubert</string>
+    <string name="lbourgeois">Lilian Bourgeois</string>
+    <string name="link_repository_name">Lien vers le repository</string>
+    <string name="link_repository" />
+    <string name="librairies">Les librairies externes utilisées</string>
+    <string name="fonctionnalites">Liste des fonctionnalités</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="author">Auteur</string>
+    <string name="date">Date</string>
+    <string name="voirplus">Voir plus</string>
+    <string name="article_details">Détail de l\'article</string>
+    <string name="favorite">Favoris</string>
 </resources>
