@@ -1,6 +1,7 @@
 package com.example.newsletter.data.service
 
 import com.example.newsletter.models.Article
+import com.example.newsletter.models.ArticleResponse
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -9,7 +10,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class CategoryOnlineService : ArticleService {
-
     private val service: RetrofitApiService
 
     init {
@@ -65,13 +65,13 @@ class CategoryOnlineService : ArticleService {
         })
     }
 
-    override fun getArticles(): List<Article> {
-        return service.category().execute().body()?.articles ?: listOf()
+    override fun getArticles(sujet: String): ArticleResponse {
+        val response = service.category(sujet).execute().body()
+        return response!!
     }
 
     companion object {
         private const val apiKey = "74ee61a5b6e14ed9bbee45bb4092e794"
         private const val apiUrl = "https://newsapi.org/"
     }
-
 }

@@ -8,5 +8,5 @@ import retrofit2.http.Url
 import java.util.*
 
 interface ArticleService {
-    fun getArticles(): List<Article>
+    fun getArticles(sujet: String): ArticleResponse
 }

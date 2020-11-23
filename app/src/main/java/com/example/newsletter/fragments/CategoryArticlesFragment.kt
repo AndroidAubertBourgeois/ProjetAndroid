@@ -13,17 +13,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsletter.NavigationListener
 import com.example.newsletter.R
-import com.example.newsletter.adapters.ArticleDetailsAdapter
+import com.example.newsletter.adapters.DetailArticleAdapter
 import com.example.newsletter.adapters.ListArticlesAdapter
 import com.example.newsletter.adapters.ListArticlesHandler
 import com.example.newsletter.data.CategoryRepository
 import com.example.newsletter.models.Article
+import com.example.newsletter.models.ArticleResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CategoryArticlesFragment (): Fragment(), ListArticlesHandler {
+class CategoryArticlesFragment (subject: String): Fragment(), ListArticlesHandler {
     private lateinit var recyclerView: RecyclerView
-
+    val subject = subject
     /**
      * Fonction permettant de définir une vue à attacher à un fragment
      */
@@ -46,14 +47,14 @@ class CategoryArticlesFragment (): Fragment(), ListArticlesHandler {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getArticles()
+        getArticles(subject)
     }
     /**
      * Récupère la liste des articles dans un thread secondaire
      */
-    private fun getArticles() {
+    private fun getArticles(subject: String) {
         lifecycleScope.launch(Dispatchers.IO) {
-            val articles = CategoryRepository.getInstance().getArticles()
+            val articles = CategoryRepository.getInstance().getArticles(subject)
             bindData(articles)
         }
     }
@@ -63,7 +64,7 @@ class CategoryArticlesFragment (): Fragment(), ListArticlesHandler {
      * Cette action doit s'effectuer sur le thread principale
      * Car on ne peut mas modifier les éléments de vue dans un thread secondaire
      */
-    private fun bindData(articles: List<Article>) {
+    private fun bindData(articles: ArticleResponse) {
         lifecycleScope.launch(Dispatchers.Main) {
             //créer l'adapter
             //associer l'adapteur au recyclerview
@@ -76,7 +77,7 @@ class CategoryArticlesFragment (): Fragment(), ListArticlesHandler {
         (activity as? NavigationListener)?.let {
             it.updateTitle(R.string.article_details)
         }
-        val adapter = ArticleDetailsAdapter(requireContext(),article,this)
+        val adapter = DetailArticleAdapter(requireContext(),article,this)
         recyclerView.adapter = adapter
     }
 
@@ -84,7 +85,7 @@ class CategoryArticlesFragment (): Fragment(), ListArticlesHandler {
         (activity as? NavigationListener)?.let {
             it.updateTitle(R.string.list_articles)
         }
-        getArticles()
+        getArticles(subject)
     }
 
     override fun showPage(url: String) {

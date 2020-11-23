@@ -13,19 +13,18 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.newsletter.R
 import com.example.newsletter.data.FavoriteDataBase
 import com.example.newsletter.models.Article
-import java.sql.Date
 import java.text.SimpleDateFormat
 
-class ArticleDetailsAdapter (
+class DetailArticleAdapter (
         private val context: Context, items: Article, val handler: ListArticlesHandler
-) : RecyclerView.Adapter<ArticleDetailsAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<DetailArticleAdapter.ViewHolder>() {
     private val article: Article = items
-    private lateinit var DB: FavoriteDataBase
+    private lateinit var favoriteDataBase: FavoriteDataBase
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        DB = FavoriteDataBase(context)
+        favoriteDataBase = FavoriteDataBase(context)
         val view: View = LayoutInflater.from(parent.context)
-                .inflate(R.layout.articles_details, parent, false)
+                .inflate(R.layout.detail_article, parent, false)
         return ViewHolder(view)
     }
 
@@ -36,36 +35,36 @@ class ArticleDetailsAdapter (
         holder.mArticleDescription.text = article.description
         holder.mArticleName.text    = article.author
         val sdfOut = SimpleDateFormat("dd-MM-yyyy")
-        val date: Date = article.publishedAt as Date
+        val date: java.util.Date = article.publishedAt
         val dateString = sdfOut.format(date)
         holder.mArticleDate.text = dateString
         val sdfPattern = SimpleDateFormat("yyMMddHHmmssSSS")
-        val dateId: Date = article.publishedAt as Date
+        val dateId: java.util.Date = article.publishedAt
         val idString = sdfPattern.format(dateId)
         article.id = idString
         readCursorData(article, holder)
 
 
         //Button on Click
-        holder.mArticleFavorite.setOnClickListener {
-            if (article.favorite == false ){
-                holder.mArticleFavorite.setImageResource(R.drawable.ic_baseline_favoris_filled_24)
-                article.favorite = true
-                DB.insertIntoTheDatabase(
+        holder.mArticleFavoris.setOnClickListener {
+            if (article.favoris == 0 ){
+                holder.mArticleFavoris.setImageResource(R.drawable.ic_baseline_favoris_filled_24)
+                article.favoris = 1
+                favoriteDataBase.insertIntoTheDatabase(
                         if (article.id!=null) article.id else "",
                         if (article.title!=null) article.title else "",
                         if (article.description!=null) article.description else "",
                         if (article.author!=null) article.author else "",
                         if (article.urlToImage!=null) article.urlToImage else "",
                         if (article.url!=null) article.url else "",
-                        true)
+                        1)
 
             }
             else
             {
-                article.favorite = false
-                DB.remove_fav(article.id)
-                holder.mArticleFavorite.setImageResource(R.drawable.ic_baseline_favoris_empty_24)
+                article.favoris = 0
+                favoriteDataBase.remove_fav(article.id)
+                holder.mArticleFavoris.setImageResource(R.drawable.ic_baseline_favoris_empty_24)
             }
         }
         holder.mArticleRetour.setOnClickListener {
@@ -86,10 +85,6 @@ class ArticleDetailsAdapter (
                 .into(holder.mArticleAvatar)
     }
 
-    override fun getItemCount(): Int {
-        return 1
-    }
-
     class ViewHolder(view: View) :
             RecyclerView.ViewHolder(view) {
         val mArticleAvatar: ImageView
@@ -99,7 +94,7 @@ class ArticleDetailsAdapter (
         val mArticleDescription: TextView
         val mArticleRetour : ImageButton
         val mArticleEditeur : TextView
-        val mArticleFavorite : ImageButton
+        val mArticleFavoris : ImageButton
 
         init {
             // Enable click on item
@@ -110,27 +105,32 @@ class ArticleDetailsAdapter (
             mArticleDescription = view.findViewById(R.id.item_list_desc)
             mArticleRetour = view.findViewById(R.id.item_back)
             mArticleEditeur = view.findViewById(R.id.item_list_editeur)
-            mArticleFavorite = view.findViewById(R.id.item_list_favorite_button)
+            mArticleFavoris = view.findViewById(R.id.item_list_favorite_button)
         }
     }
+
+    override fun getItemCount(): Int {
+        return 1
+    }
+
     private fun readCursorData(
             article: Article,
-            viewHolder: ArticleDetailsAdapter.ViewHolder
+            viewHolder: DetailArticleAdapter.ViewHolder
     ) {
-        val cursor = DB.read_all_data(article.id)
-        val db = DB.readableDatabase
+        val cursor = favoriteDataBase.read_all_data(article.id)
+        val db = favoriteDataBase.readableDatabase
         try {
             while (cursor.moveToNext()) {
                 val item_fav_status =
-                        cursor.getString(cursor.getColumnIndex(FavoriteDataBase.FAVORITE_STATUS)).toBoolean()
-                article.favorite = item_fav_status
+                        cursor.getInt(cursor.getColumnIndex(FavoriteDataBase.FAVORITE_STATUS))
+                article.favoris = item_fav_status
 
                 //check fav status
-                if (item_fav_status) {
-                    viewHolder.mArticleFavorite.setImageResource(R.drawable.ic_baseline_favoris_filled_24)
+                if (item_fav_status != null && item_fav_status == 1) {
+                    viewHolder.mArticleFavoris.setImageResource(R.drawable.ic_baseline_favoris_filled_24)
 
-                } else if (!item_fav_status) {
-                    viewHolder.mArticleFavorite.setImageResource(R.drawable.ic_baseline_favoris_empty_24)
+                } else if (item_fav_status != null && item_fav_status == 0) {
+                    viewHolder.mArticleFavoris.setImageResource(R.drawable.ic_baseline_favoris_empty_24)
                 }
             }
         } finally {

@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 
-class FavoriteDataBase(context: Context?):
+class FavoriteDataBase(context: Context?) :
         SQLiteOpenHelper(context, DATABASE_NAME, null, DB_VERSION) {
     override fun onCreate(sqLiteDatabase: SQLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_TABLE)
@@ -22,7 +22,7 @@ class FavoriteDataBase(context: Context?):
             author: String,
             urlToImage: String,
             url: String,
-            favorite: Boolean
+            favorite: Int
     ) {
         val db: SQLiteDatabase
         db = this.writableDatabase
@@ -51,7 +51,7 @@ class FavoriteDataBase(context: Context?):
     fun remove_fav(id: String) {
         val db = this.writableDatabase
         val sql =
-                "UPDATE $TABLE_NAME SET  $FAVORITE_STATUS =false WHERE $KEY_ID=$id"
+                "UPDATE $TABLE_NAME SET  $FAVORITE_STATUS =0 WHERE $KEY_ID=$id"
         db.execSQL(sql)
         Log.d("remove", id)
     }
@@ -59,7 +59,7 @@ class FavoriteDataBase(context: Context?):
     fun select_all_favorite_list(): Cursor {
         val db = this.readableDatabase
         val sql =
-                "SELECT * FROM $TABLE_NAME WHERE $FAVORITE_STATUS =true"
+                "SELECT * FROM $TABLE_NAME WHERE $FAVORITE_STATUS =1"
         return db.rawQuery(sql, null, null)
     }
 
@@ -78,7 +78,7 @@ class FavoriteDataBase(context: Context?):
         private val CREATE_TABLE =
                 ("CREATE TABLE " + TABLE_NAME + "("
                         + KEY_ID + " TEXT," + ARTICLE_TITLE + " TEXT," + ARTICLE_DESCRIPTION + " TEXT," + ARTICLE_AUTHOR + " TEXT,"
-                        + ARTICLE_URL + " TEXT," + ARTICLE_IMAGE + " TEXT," + FAVORITE_STATUS + " BOOLEAN)")
+                        + ARTICLE_URL + " TEXT," + ARTICLE_IMAGE + " TEXT," + FAVORITE_STATUS + " INT)")
     }
 }
 

@@ -4,14 +4,14 @@ import java.util.*
 
 
 data class Article(
-        var id : String,
+        var id: String,
+        val source : Source,
         val author:String,
         val title: String,
         val description:String,
-        val content: String,
-        val source: Source,
         val url: String,
         val urlToImage: String,
         val publishedAt: Date,
-        var favorite: Boolean=false
+        val content: String,
+        var favoris: Int =0
 )

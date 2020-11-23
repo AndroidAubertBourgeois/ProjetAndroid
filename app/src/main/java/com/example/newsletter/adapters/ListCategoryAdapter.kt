@@ -21,7 +21,7 @@ class ListCategoryAdapter (val handler: SourceHandler): RecyclerView.Adapter<Lis
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(parent.context)
-                .inflate(R.layout.button_item, parent, false)
+                .inflate(R.layout.type_button_item, parent, false)
         return ViewHolder(view)
     }
 
@@ -39,13 +39,7 @@ class ListCategoryAdapter (val handler: SourceHandler): RecyclerView.Adapter<Lis
 
     class ViewHolder(view: View) :
             RecyclerView.ViewHolder(view) {
-        val mButton: Button
+        val mButton: Button = view.findViewById(R.id.btn_item)
 
-
-        init {
-            // Enable click on item
-            mButton = view.findViewById(R.id.btn_item)
-
-        }
     }
 }

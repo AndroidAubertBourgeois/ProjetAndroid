@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsletter.NavigationListener
 import com.example.newsletter.R
-import com.example.newsletter.adapters.ArticleDetailsAdapter
+import com.example.newsletter.adapters.DetailArticleAdapter
 import com.example.newsletter.adapters.FavoriteAdapter
 import com.example.newsletter.adapters.ListArticlesHandler
 import com.example.newsletter.data.FavoriteDataBase
@@ -22,7 +22,7 @@ import com.example.newsletter.models.ArticleFavorite
 
 class FavorisFragment : Fragment(), ListArticlesHandler{
     private lateinit var recyclerView: RecyclerView
-    private lateinit var DB: FavoriteDataBase
+    private lateinit var favDB: FavoriteDataBase
     private var favoriteList: MutableList<ArticleFavorite> = ArrayList<ArticleFavorite>()
     // private lateinit var favAdapter: ListFavArticlesAdapter
     /**
@@ -42,7 +42,7 @@ class FavorisFragment : Fragment(), ListArticlesHandler{
                         DividerItemDecoration.VERTICAL
                 )
         )
-        DB = FavoriteDataBase(activity)
+        favDB = FavoriteDataBase(activity)
         loadData(requireContext())
         return view
     }
@@ -55,6 +55,29 @@ class FavorisFragment : Fragment(), ListArticlesHandler{
         }
     }
 
+    override fun showArticle(article: Article) {
+        (activity as? NavigationListener)?.let {
+            it.updateTitle(R.string.article_details)
+        }
+        val adapter = DetailArticleAdapter(requireContext() ,article, this)
+        recyclerView.adapter = adapter
+    }
+
+    override fun back() {
+        (activity as? NavigationListener)?.let {
+            it.updateTitle(R.string.favorite)
+        }
+        val adapter = FavoriteAdapter(requireContext(), this,favoriteList)
+        recyclerView.adapter = adapter
+
+    }
+
+    override fun showPage(url: String) {
+        val chemin: Uri = Uri.parse(url)
+        val naviguer = Intent(Intent.ACTION_VIEW, chemin)
+        startActivity(naviguer)
+    }
+
 
 
 
@@ -62,8 +85,8 @@ class FavorisFragment : Fragment(), ListArticlesHandler{
         if (favoriteList != null) {
             favoriteList.clear()
         }
-        val db = DB.readableDatabase
-        val cursor = DB.select_all_favorite_list()
+        val db = favDB.readableDatabase
+        val cursor = favDB.select_all_favorite_list()
         try {
             while (cursor.moveToNext()) {
                 val title = cursor.getString(cursor.getColumnIndex(FavoriteDataBase.ARTICLE_TITLE))
@@ -84,27 +107,5 @@ class FavorisFragment : Fragment(), ListArticlesHandler{
         recyclerView.adapter = adapter
     }
 
-    override fun showArticle(article: Article) {
-        (activity as? NavigationListener)?.let {
-            it.updateTitle(R.string.article_details)
-        }
-        val adapter = ArticleDetailsAdapter(requireContext() ,article, this)
-        recyclerView.adapter = adapter
-    }
-
-    override fun back() {
-        (activity as? NavigationListener)?.let {
-            it.updateTitle(R.string.favorite)
-        }
-        val adapter = FavoriteAdapter(requireContext(), this,favoriteList)
-        recyclerView.adapter = adapter
-
-    }
-
-    override fun showPage(url: String) {
-        val chemin: Uri = Uri.parse(url)
-        val naviguer = Intent(Intent.ACTION_VIEW, chemin)
-        startActivity(naviguer)
-    }
 
 }

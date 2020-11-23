@@ -8,8 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsletter.NavigationListener
 import com.example.newsletter.R
 
@@ -41,14 +39,14 @@ class HomeFragment : Fragment(){
 
         tousArticles.setOnClickListener {
             (activity as? NavigationListener)?.let {
-                it.showFragment(ListArticlesFragment())
+                it.showFragment(ListArticlesFragment("actuality"))
                 it.updateTitle(R.string.list_articles)
             }
         }
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.btn_home_toolbar).isVisible = false
+        menu.findItem(R.id.toolbar_btn_home).isVisible = false
         super.onPrepareOptionsMenu(menu)
     }
 

@@ -27,11 +27,11 @@ class ArticleOnlineService : ArticleService {
             addApiInterceptor(this)
         }.build()
         return Retrofit
-            .Builder()
-            .baseUrl(apiUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(httpClient)
-            .build()
+                .Builder()
+                .baseUrl(apiUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient)
+                .build()
     }
 
     /**
@@ -54,24 +54,25 @@ class ArticleOnlineService : ArticleService {
                 val original = chain.request()
                 val originalHttpUrl = original.url
                 val url = originalHttpUrl.newBuilder()
-                    .addQueryParameter("apikey", apiKey)
-                    .build()
+                        .addQueryParameter("apikey", apiKey)
+                        .build()
 
                 val requestBuilder = original.newBuilder()
-                    .url(url)
+                        .url(url)
                 val request = requestBuilder.build()
                 return chain.proceed(request)
             }
         })
     }
 
-    override fun getArticles(): List<Article> {
-        return service.list().execute().body()?.articles ?: listOf()
+    override fun getArticles(sujet: String): ArticleResponse {
+        val response = service.list(sujet).execute().body()
+        return response!!
     }
 
     companion object {
         private const val apiKey = "74ee61a5b6e14ed9bbee45bb4092e794"
-        private const val apiUrl = "https://newsapi.org"
+        private const val apiUrl = "https://newsapi.org/"
     }
 
 }

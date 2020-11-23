@@ -13,7 +13,7 @@ import com.example.newsletter.R
 import com.example.newsletter.adapters.ListCategoryAdapter
 import com.example.newsletter.adapters.SourceHandler
 
-class ListCategoryFragment : Fragment() , SourceHandler {
+class ListCategoryFragment : Fragment(), SourceHandler{
     private lateinit var recyclerView: RecyclerView
 
     /**
@@ -24,9 +24,9 @@ class ListCategoryFragment : Fragment() , SourceHandler {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.list_button, container, false)
+        val view = inflater.inflate(R.layout.list_type_button, container, false)
         recyclerView = view.findViewById(R.id.list_button)
-        recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        recyclerView.layoutManager = LinearLayoutManager(context,RecyclerView.HORIZONTAL, false)
         recyclerView.addItemDecoration(
                 DividerItemDecoration(
                         requireContext(),
@@ -44,7 +44,7 @@ class ListCategoryFragment : Fragment() , SourceHandler {
 
     override fun showSource(source: String) {
         (activity as? NavigationListener)?.let {
-            it.showFragment(CategoryArticlesFragment())
+            it.showFragment(CategoryArticlesFragment(source))
             it.updateTitle(R.string.list_articles)
         }
     }

@@ -4,14 +4,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.example.newsletter.fragments.AboutUsFragment
 import com.example.newsletter.fragments.FavorisFragment
 import com.example.newsletter.fragments.HomeFragment
-import com.example.newsletter.fragments.ListArticlesFragment
 
 class MainActivity : AppCompatActivity(),
         NavigationListener {
@@ -47,7 +44,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
-        menu.findItem(R.id.btn_home_toolbar).isVisible = true
+        menu.findItem(R.id.toolbar_btn_home).isVisible = true
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -61,12 +58,12 @@ class MainActivity : AppCompatActivity(),
                 updateTitle(R.string.aboutus)
                 true
             }
-            R.id.btn_favorite_toolbar -> {
+            R.id.toolbar_btn_favoris -> {
                 showFragment(FavorisFragment())
                 updateTitle(R.string.favorite)
                 true
             }
-            R.id.btn_home_toolbar -> {
+            R.id.toolbar_btn_home -> {
                 showFragment(HomeFragment())
                 updateTitle(R.string.home)
                 true

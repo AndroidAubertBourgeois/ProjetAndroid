@@ -2,12 +2,16 @@ package com.example.newsletter.data
 
 import com.example.newsletter.data.service.CategoryOnlineService
 import com.example.newsletter.models.Article
+import com.example.newsletter.models.ArticleResponse
 
 class CategoryRepository {
+    private val apiService: CategoryOnlineService
 
-    private val apiService: CategoryOnlineService = CategoryOnlineService()
+    init {
+        apiService = CategoryOnlineService()
+    }
 
-    fun getArticles(): List<Article> = apiService.getArticles()
+    fun getArticles(subject: String): ArticleResponse = apiService.getArticles(subject)
 
 
     companion object {
